@@ -94,27 +94,28 @@ if (!userTheme) {
 const darkModeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
 function switchActiveButton(activeTheme) {
-  const systemTheme = darkModeMediaQuery.matches ? "darkModeBtn" : "lightModeBtn";
+  let oppositeTheme;
 
-  if (activeTheme === "defaultThemeBtn") {
-    activeTheme = systemTheme;
-    buttons.forEach(button => {
-      if (button.dataset.theme === "defaultThemeBtn") {
-        button.classList.add("active");
-      } else {
-        button.classList.remove("active");
-      }
-    });
+  // تعیین تم مخالف
+  if (activeTheme === "lightModeBtn") {
+    oppositeTheme = "darkModeBtn";
+  } else if (activeTheme === "darkModeBtn") {
+    oppositeTheme = "lightModeBtn";
   } else {
-    buttons.forEach(button => {
-      if (button.dataset.theme === activeTheme) {
-        button.classList.add("active");
-      } else {
-        button.classList.remove("active");
-      }
-    });
+    // حالت دیفالت → همون تم سیستم
+    oppositeTheme = darkModeMediaQuery.matches ? "lightModeBtn" : "darkModeBtn";
   }
 
+  // فعال کردن دکمه مخالف
+  buttons.forEach(button => {
+    if (button.dataset.theme === oppositeTheme) {
+      button.classList.add("active");
+    } else {
+      button.classList.remove("active");
+    }
+  });
+
+  // اعمال همون activeTheme روی body (تم اصلی)
   body.className = activeTheme;
   localStorage.setItem("theme", activeTheme);
 }
@@ -136,6 +137,7 @@ buttons.forEach(button => {
 // Apply user's preferred theme
 switchActiveButton(userTheme);
 ///////////////////////////////////////////// switch theme
+
 
 //////////////////////////////////////////////////////// search site
 const searchFocus = document.getElementById('search-site')
@@ -293,7 +295,7 @@ if (copyButton) {
 /////////////////////////////////////////////////////// copy link
 
 /////////////////////////////////////////////////////// change text
-const paragraphs = document.querySelectorAll('p.info-text');
+const paragraphs = document.querySelectorAll('a.info-text');
 if (paragraphs.length > 0) {
   let index = 0;
   setInterval(() => {
@@ -1044,23 +1046,3 @@ function panelMobile() {
   panelMobile.classList.toggle('active');
 }
 ///////////////////////////////////////////// panel mobile
-
-///////////////////////////////////////////// seller
-document.addEventListener("DOMContentLoaded", () => {
-  const radios = document.querySelectorAll('input[name="seller-type"]');
-  const boxes = document.querySelectorAll(".seller");
-
-  radios.forEach((radio) => {
-    radio.addEventListener("change", () => {
-      // حذف کلاس active از همه باکس‌ها
-      boxes.forEach((box) => box.classList.remove("active"));
-
-      // پیدا کردن باکس مرتبط با رادیوی انتخاب‌شده
-      const targetBox = document.querySelector(`#box-${radio.id}`);
-      if (targetBox) {
-        targetBox.classList.add("active"); // اضافه کردن کلاس active به باکس هدف
-      }
-    });
-  });
-});
-///////////////////////////////////////////// seller
